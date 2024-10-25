@@ -2,29 +2,21 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Star, Zap, Award, Trophy, Calendar, Sun, Moon, Droplet, CheckCircle } from "lucide-react"
+import { ChevronLeft, ChevronRight, Zap, Trophy, Calendar, Sun, Moon, Droplet } from "lucide-react"
 import { Button } from "../components/ui/button"
 import { Progress } from "../components/ui/progress"
 import { Input } from "../components/ui/input"
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
+  CardContent,
+  CardFooter,
+  CardDescription,
   CardTitle,
 } from "../components/ui/card"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../components/ui/table"
 import { Badge } from "../components/ui/badge"
 import { useToast } from "../components/ui/use-toast"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "../components/ui/tabs"
 
 type Habit = {
   name: string
@@ -146,11 +138,7 @@ export default function MITMissionTracker() {
     if (habit.unit === "min" || habit.unit === "AM" || habit.unit === "PM") {
       const [entryHours, entryMinutes] = entry.split(":").map(Number)
       const [goalHours, goalMinutes] = habit.goal.split(":").map(Number)
-      if (habit.name === "Sleep Schedule") {
-        return entryHours < goalHours || (entryHours === goalHours && entryMinutes <= goalMinutes)
-      } else {
-        return entryHours < goalHours || (entryHours === goalHours && entryMinutes <= goalMinutes)
-      }
+      return entryHours < goalHours || (entryHours === goalHours && entryMinutes <= goalMinutes)
     }
     return parseFloat(entry) >= parseFloat(habit.goal)
   }
@@ -210,107 +198,113 @@ export default function MITMissionTracker() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-red-900 text-white p-4">
       <Card className="w-full max-w-4xl mx-auto bg-gray-800 border-gray-700">
-        <CardHeader className="p-4">
-          <CardTitle className="text-2xl font-bold text-red-500 text-center">
-            MIT Mission Tracker
-          </CardTitle>
-          <CardDescription className="text-gray-300 text-center">
-            Your journey towards MIT begins here
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-            <Button variant="outline" onClick={() => navigate(-1)} className="mb-2 sm:mb-0">
-              <ChevronLeft className="mr-2" /> Previous {viewMode}
-            </Button>
-            <Tabs value={viewMode} onValueChange={(value: 'day' | 'week' | 'month') => setViewMode(value)}>
-              <TabsList>
-                <TabsTrigger value="day"><Sun className="w-4 h-4 mr-1" />Day</TabsTrigger>
-                <TabsTrigger value="week"><Calendar className="w-4 h-4 mr-1" />Week</TabsTrigger>
-                <TabsTrigger value="month"><Moon className="w-4 h-4 mr-1" />Month</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <Button variant="outline" onClick={() => navigate(1)} className="mt-2 sm:mt-0">
-              Next {viewMode} <ChevronRight className="ml-2" />
-            </Button>
-          </div>
-          <h2 className="text-xl font-semibold text-red-400 mb-2 text-center">
-            {viewMode === 'day' && currentDate.toLocaleDateString()}
-            {viewMode === 'week' && `Week of ${dates[0]}`}
-            {viewMode === 'month' && currentDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
-          </h2>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {habits.map((habit, index) => (
-              <div key={habit.name} className="mb-4 p-4 bg-gray-700 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-semibold text-red-300">{habit.name}</h3>
-                  <Badge variant="secondary" className="bg-red-600 text-white">
-                    <Zap className="w-4 h-4 mr-1" />
-                    {habit.streak} days
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between mb-2">
-                  <p>Goal: {habit.goal} {habit.unit}</p>
-                  {viewMode === 'day' && (
-                    <Input
-                      type={habit.unit === "min" || habit.unit === "AM" || habit.unit === "PM" ? "time" : "number"}
-                      value={habit.entries[dates[0]] || ""}
-                      onChange={(e) => updateHabitProgress(index, dates[0], e.target.value)}
-                      className="w-24 bg-gray-600 border-gray-500 text-white"
-                    />
-                  )}
-                </div>
-                {habit.chunks ? (
-                  <div className="flex items-center">
-                    {getChunkIcons(habit, dates[0])}
-                  </div>
-                ) : (
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${calculateProgress(habit)}%` }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <Progress value={calculateProgress(habit)} className="w-full h-2" />
-                  </motion.div>
-                )}
-              </div>
-            ))}
-          </motion.div>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center p-4">
-          <div className="w-full mb-4">
-            <h3 className="text-lg font-semibold mb-2 text-red-500 text-center">Overall Progress</h3>
+        <div className="p-4">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-red-500 text-center">
+              MIT Mission Tracker
+            </CardTitle>
+            <CardDescription className="text-gray-300 text-center">
+              Your journey towards MIT begins here
+            </CardDescription>
+          </CardHeader>
+        </div>
+        <div className="p-4">
+          <CardContent>
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+              <Button variant="outline" onClick={() => navigate(-1)} className="mb-2 sm:mb-0">
+                <ChevronLeft className="mr-2" /> Previous {viewMode}
+              </Button>
+              <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'day' | 'week' | 'month')}>
+                <TabsList>
+                  <TabsTrigger value="day"><Sun className="w-4 h-4 mr-1" />Day</TabsTrigger>
+                  <TabsTrigger value="week"><Calendar className="w-4 h-4 mr-1" />Week</TabsTrigger>
+                  <TabsTrigger value="month"><Moon className="w-4 h-4 mr-1" />Month</TabsTrigger>
+                </TabsList>
+              </Tabs>
+              <Button variant="outline" onClick={() => navigate(1)} className="mt-2 sm:mt-0">
+                Next {viewMode} <ChevronRight className="ml-2" />
+              </Button>
+            </div>
+            <h2 className="text-xl font-semibold text-red-400 mb-2 text-center">
+              {viewMode === 'day' && currentDate.toLocaleDateString()}
+              {viewMode === 'week' && `Week of ${dates[0]}`}
+              {viewMode === 'month' && currentDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+            </h2>
             <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${calculateOverallProgress()}%` }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Progress value={calculateOverallProgress()} className="w-full h-4" />
+              {habits.map((habit, index) => (
+                <div key={habit.name} className="mb-4 p-4 bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-red-300">{habit.name}</h3>
+                    <Badge variant="secondary" className="bg-red-600 text-white">
+                      <Zap className="w-4 h-4 mr-1" />
+                      {habit.streak} days
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p>Goal: {habit.goal} {habit.unit}</p>
+                    {viewMode === 'day' && (
+                      <Input
+                        type={habit.unit === "min" || habit.unit === "AM" || habit.unit === "PM" ? "time" : "number"}
+                        value={habit.entries[dates[0]] || ""}
+                        onChange={(e) => updateHabitProgress(index, dates[0], e.target.value)}
+                        className="w-24 bg-gray-600 border-gray-500 text-white"
+                      />
+                    )}
+                  </div>
+                  {habit.chunks ? (
+                    <div className="flex items-center">
+                      {getChunkIcons(habit, dates[0])}
+                    </div>
+                  ) : (
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${calculateProgress(habit)}%` }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Progress value={calculateProgress(habit)} className="w-full h-2" />
+                    </motion.div>
+                  )}
+                </div>
+              ))}
             </motion.div>
-          </div>
-          <div className="flex items-center justify-between w-full">
-            <Badge variant="outline" className="text-lg p-2 bg-gray-800 border-red-500 text-red-500">
-              <Trophy className="w-6 h-6 mr-2 text-yellow-400" />
-              Level {level}
-            </Badge>
-            <AnimatePresence>
-              <motion.p
-                key={quote}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0  }}
-                exit={{ opacity: 0, y: -20 }}
+          </CardContent>
+        </div>
+        <div className="flex flex-col items-center p-4">
+          <CardFooter>
+            <div className="w-full mb-4">
+              <h3 className="text-lg font-semibold mb-2 text-red-500 text-center">Overall Progress</h3>
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${calculateOverallProgress()}%` }}
                 transition={{ duration: 0.5 }}
-                className="text-sm italic text-gray-300 max-w-md text-center"
               >
-                "{quote}"
-              </motion.p>
-            </AnimatePresence>
-          </div>
-        </CardFooter>
+                <Progress value={calculateOverallProgress()} className="w-full h-4" />
+              </motion.div>
+            </div>
+            <div className="flex items-center justify-between w-full">
+              <Badge variant="outline" className="text-lg p-2 bg-gray-800 border-red-500 text-red-500">
+                <Trophy className="w-6 h-6 mr-2 text-yellow-400" />
+                Level {level}
+              </Badge>
+              <AnimatePresence>
+                <motion.p
+                  key={quote}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0  }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-sm italic text-gray-300 max-w-md text-center"
+                >
+                  "{quote}"
+                </motion.p>
+              </AnimatePresence>
+            </div>
+          </CardFooter>
+        </div>
       </Card>
     </div>
   )

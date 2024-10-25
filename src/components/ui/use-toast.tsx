@@ -1,5 +1,4 @@
-// src/components/ui/use-toast.tsx
-import { toast as hotToast, ToastOptions, Toaster } from 'react-hot-toast';
+import { toast as hotToast, Toaster } from 'react-hot-toast';
 import React from 'react';
 
 interface ToastProps {
