@@ -1,4 +1,4 @@
-import HomePage from './components/HomePage'
+import HomePage from './pages/Homepage'
 import "./styles/globals.css";  // Adjust path based on your project
 
 
