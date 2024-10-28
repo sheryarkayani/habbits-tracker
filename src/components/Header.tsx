@@ -1,7 +1,20 @@
 import { Button } from "../components/ui/button";
 import { Input } from "./ui/input";
+import { useState } from "react";
+import { saveChanges } from "../habitService";
 
 export default function Header() {
+  const [formData, setFormData] = useState({ /* initial form data */ });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSave = () => {
+    saveChanges(formData);
+  };
+
   return (
     <header className="bg-[#1e6e41] text-white py-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center px-6">
@@ -39,6 +52,16 @@ export default function Header() {
             SEND INQUIRY
           </Button>
         </div>
+      </div>
+
+      {/* Form Inputs */}
+      <div className="mt-4">
+        <Input name="field1" value={formData.field1} onChange={handleInputChange} />
+        <Input name="field2" value={formData.field2} onChange={handleInputChange} />
+        {/* Save Button */}
+        <Button onClick={handleSave} className="mt-4 bg-[#2e8b57] text-white hover:bg-[#236e44] px-4 py-2 rounded-md transition-all duration-300 shadow-md">
+          Save
+        </Button>
       </div>
     </header>
   );

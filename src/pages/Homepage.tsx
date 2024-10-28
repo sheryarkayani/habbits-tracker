@@ -18,6 +18,7 @@ import { Badge } from "../components/ui/badge"
 import { useToast } from "../components/ui/use-toast"
 import { Tabs, TabsList, TabsTrigger } from "../components/ui/tabs"
 
+
 type Habit = {
   name: string
   goal: string
